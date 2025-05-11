@@ -39,3 +39,9 @@ uv pip install viser
 uv pip install viser[examples]
 uv pip install -U "jax[cuda12]"
 ```
+
+# Running datagen
+```
+source .venv/bin/activate
+python scripts/run.py
+```
