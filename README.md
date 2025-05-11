@@ -1,4 +1,4 @@
-# xi
+# r2r2r
 
 ## Installation
 Follow IsaacLab's installation: https://isaac-sim.github.io/IsaacLab/main/source/setup/installation/index.html
@@ -15,7 +15,7 @@ Then install all with `pip install -e .` all of the dependencies including those
 
 ## uv Installation
 ```
-git clone https://github.com/el-refai/xi.git
+git clone https://github.com/el-refai/r2r2r.git
 git submodule init && git submodule update
 pip install uv
 uv venv --python 3.10.15
