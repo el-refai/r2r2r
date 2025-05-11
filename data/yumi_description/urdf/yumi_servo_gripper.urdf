@@ -1,0 +1,142 @@
+<?xml version="1.0"?>
+<robot name="yumi_gripper">
+    <!-- Define materials -->
+    <material name="Light_Grey">
+        <color rgba="0.7 0.7 0.7 1.0"/>
+    </material>
+    <material name="Grey">
+        <color rgba="0.5 0.5 0.5 1.0"/>
+    </material>
+
+    <!-- Add a world link as the root -->
+    <link name="world"/>
+
+    <!-- Fixed joint to world -->
+    <joint name="world_joint" type="fixed">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="world"/>
+        <child link="gripper_base"/>
+    </joint>
+
+    <!-- Base link -->
+    <link name="gripper_base">
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <mass value="0.2"/>
+            <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.0001"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://yumi_description/meshes/gripper/base.stl"/>
+            </geometry>
+            <material name="Light_Grey"/>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://yumi_description/meshes/gripper/coarse/base.stl"/>
+            </geometry>
+            <material name="Light_Grey"/>
+        </collision>
+    </link>
+    
+    <!-- Dummy point for TCP -->
+    <joint name="gripper_dummy_joint" type="fixed">
+        <origin rpy="0 0 3.14159265359" xyz="0 0 0.13"/>
+        <parent link="gripper_base"/>
+        <child link="gripper_dummy_point"/>
+    </joint>
+    <link name="gripper_dummy_point"/>
+
+    <!-- Right finger joint -->
+    <joint name="gripper_joint" type="prismatic">
+        <parent link="gripper_base"/>
+        <child link="gripper_finger_r"/>
+        <origin xyz="0 -0.0065 0.0837" rpy="0 0 0"/>
+        <axis xyz="-1 0 0"/>
+        <limit lower="0" upper="0.025" effort="300" velocity="0.02"/>
+        <dynamics damping="0.5"/>
+    </joint>
+
+    <!-- Right finger link -->
+    <link name="gripper_finger_r">
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <mass value="0.01"/>
+            <inertia ixx="0.000001" ixy="0" ixz="0" iyy="0.000001" iyz="0" izz="0.000001"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://yumi_description/meshes/gripper/finger.stl"/>
+            </geometry>
+            <material name="Grey"/>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://yumi_description/meshes/gripper/coarse/finger.stl"/>
+            </geometry>
+            <material name="Grey"/>
+        </collision>
+    </link>
+
+    <!-- Left finger joint (mimic joint) -->
+    <joint name="gripper_joint_m" type="prismatic">
+        <parent link="gripper_base"/>
+        <child link="gripper_finger_l"/>
+        <origin xyz="0 0.0065 0.0837" rpy="0 0 3.14159265359"/>
+        <axis xyz="-1 0 0"/>
+        <limit lower="0" upper="0.025" effort="300" velocity="0.02"/>
+        <dynamics damping="0.5"/>
+        <mimic joint="gripper_joint"/>
+    </joint>
+
+    <!-- Left finger link -->
+    <link name="gripper_finger_l">
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <mass value="0.01"/>
+            <inertia ixx="0.000001" ixy="0" ixz="0" iyy="0.000001" iyz="0" izz="0.000001"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://yumi_description/meshes/gripper/finger.stl"/>
+            </geometry>
+            <material name="Grey"/>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://yumi_description/meshes/gripper/coarse/finger.stl"/>
+            </geometry>
+            <material name="Grey"/>
+        </collision>
+    </link>
+
+    <!-- Gazebo-specific elements -->
+    <gazebo reference="gripper_base">
+        <material>Gazebo/Light_Grey</material>
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+    </gazebo>
+
+    <!-- Transmission for ros_control -->
+    <transmission name="gripper_tran">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="gripper_joint">
+            <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="gripper_motor">
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+</robot>
