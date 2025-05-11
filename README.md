@@ -15,7 +15,7 @@ Then install all with `pip install -e .` all of the dependencies including those
 
 ## uv Installation
 ```
-git clone https://github.com/BerkeleyAutomation/xi.git
+git clone https://github.com/el-refai/xi.git
 git submodule init && git submodule update
 pip install uv
 uv venv --python 3.10.15
